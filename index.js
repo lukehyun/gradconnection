@@ -1,5 +1,7 @@
 const cheerio = require('cheerio');
 const axios = require('axios');
+const fs = require('fs');
+const stringify = require('csv-stringify/sync');
 
 let titles;
 let urls;
@@ -34,8 +36,13 @@ async function getdata() {
 	closingdates=[];
 
 	await getdata();
-	console.log(titles)
-	console.log(urls)
-	console.log(closingdates)
-})();
 
+	let datacsv=[];
+	for (let idx=0; idx<titles.length;idx++ )
+	{
+		datacsv.push([titles[idx],closingdates[idx],'https://au.gradconnection.com'+urls[idx]]);
+	}
+	
+	let csv=stringify['stringify'](datacsv);
+	fs.writeFileSync('list.csv', csv);
+})();
